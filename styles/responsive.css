@@ -1,0 +1,143 @@
+/* Breakpoints: desktop ≥1000, tablet 700–999, mobile <700 */
+
+@media (max-width: 999px) {
+  .app-shell,
+  .app-root {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+
+  .preview-pane,
+  .preview-panel {
+    min-height: 16rem;
+    max-height: 42vh;
+  }
+
+  .canvas-shell-wrap {
+    min-height: 8rem;
+  }
+
+  .settings-pane,
+  .control-panel {
+    order: 2;
+    overflow: visible;
+  }
+
+  .settings-scroll {
+    overflow: visible;
+  }
+
+  .settings-footer,
+  .panel-footer.stage-continue {
+    position: sticky;
+    bottom: 0;
+  }
+}
+
+@media (max-width: 699px) {
+  .app-shell,
+  .app-root {
+    padding:
+      max(var(--space-2), var(--safe-top))
+      var(--space-3)
+      max(var(--space-2), var(--safe-bottom));
+    gap: var(--space-2);
+  }
+
+  .brand-tagline {
+    font-size: var(--font-size-xs);
+  }
+
+  .step-list {
+    gap: var(--space-1);
+  }
+
+  .relief-strength-choices {
+    grid-template-columns: 1fr;
+  }
+
+  .step-button {
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    padding: var(--space-2);
+    font-size: var(--font-size-xs);
+  }
+
+  .preview-pane,
+  .preview-panel {
+    max-height: 34vh;
+  }
+
+  .preview-pane.is-collapsed {
+    max-height: 5rem;
+  }
+
+  .button,
+  .input,
+  .choice {
+    min-height: var(--touch-target-min);
+  }
+
+  .export-file-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .toast-host,
+  .app-status-host {
+    left: var(--space-2);
+    right: var(--space-2);
+    bottom: calc(var(--space-2) + 1.25rem);
+    max-width: none;
+  }
+
+  .button-row-compact {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1366px) {
+  .workspace {
+    --panel-width: clamp(360px, 28vw, 480px);
+  }
+}
+
+@media (min-width: 1440px) {
+  .workspace {
+    --panel-width: clamp(360px, 26vw, 480px);
+  }
+}
+
+@media (min-width: 1920px) {
+  .workspace {
+    --panel-width: clamp(380px, 24vw, 480px);
+  }
+}
+
+@media (max-height: 800px) and (min-width: 900px) {
+  .app-shell,
+  .app-root {
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .app-header {
+    padding-bottom: var(--space-1);
+  }
+
+  .preview-pane,
+  .preview-panel {
+    padding: var(--space-2);
+  }
+
+  .brand-tagline {
+    display: none;
+  }
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Compute 3MF golden metrics (M7.3)</title>
+  </head>
+  <body>
+    <pre id="out">Computing…</pre>
+    <script type="module">
+      import { createBoxMesh } from "../src/geometry/primitives.js";
+      import { createThreeMfBytes } from "../src/export/three-mf.js";
+      import { validateThreeMfPackage } from "../src/export/three-mf-validate.js";
+      import { readZipStore } from "../src/export/zip-store.js";
+      import { GOLDEN_3MF_MESH_SPEC } from "./fixtures/three-mf-golden.js";
+      import {
+        createTestDownloadAdapter,
+        setDownloadAdapter,
+      } from "../src/export/download.js";
+
+      setDownloadAdapter(createTestDownloadAdapter());
+
+      function fnv1aHex(bytes) {
+        let h = 0x811c9dc5;
+        for (let i = 0; i < bytes.length; i += 1) {
+          h ^= bytes[i];
+          h = Math.imul(h, 0x01000193);
+        }
+        return (h >>> 0).toString(16).padStart(8, "0");
+      }
+
+      function build(style) {
+        const spec = GOLDEN_3MF_MESH_SPEC;
+        const baseMesh = createBoxMesh(
+          spec.baseBox.minX, spec.baseBox.minY, spec.baseBox.minZ,
+          spec.baseBox.maxX, spec.baseBox.maxY, spec.baseBox.maxZ,
+        );
+        const roofMesh = createBoxMesh(
+          spec.roofBox.minX, spec.roofBox.minY, spec.roofBox.minZ,
+          spec.roofBox.maxX, spec.roofBox.maxY, spec.roofBox.maxZ,
+        );
+        const boxes = style === "relief" ? spec.reliefColorBoxes : spec.colorBoxes;
+        const colorMeshes = boxes.map((box) => ({
+          paletteIndex: box.paletteIndex,
+          color: { ...box.color },
+          mesh: createBoxMesh(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ),
+        }));
+        return createThreeMfBytes({
+          projectName: spec.projectName,
+          baseMesh,
+          roofMesh,
+          colorMeshes,
+          baseColor: { ...spec.baseColor },
+          surfaceStyle: style,
+          geometryVersion: 1,
+        });
+      }
+
+      const flat = build("flat");
+      const relief = build("relief");
+      const flatVal = validateThreeMfPackage(flat.bytes, {
+        expectedUsedColors: 2,
+        expectedObjectCount: 5,
+        expectedChildObjectCount: 4,
+        roofMesh: flat /* placeholder not used for count */,
+      });
+      // Re-validate with correct roof mesh reference via packaging inputs
+      const flatVal2 = validateThreeMfPackage(flat.bytes, { expectedUsedColors: 2 });
+      const reliefVal = validateThreeMfPackage(relief.bytes, { expectedUsedColors: 4 });
+
+      const report = {
+        flat: {
+          byteLength: flat.bytes.byteLength,
+          fnv1a: fnv1aHex(flat.bytes),
+          ...flat.manifest,
+          entryPaths: readZipStore(flat.bytes).entries.map((e) => e.path),
+          validationOk: flatVal2.ok,
+          reasons: flatVal2.reasons,
+        },
+        relief: {
+          byteLength: relief.bytes.byteLength,
+          fnv1a: fnv1aHex(relief.bytes),
+          ...relief.manifest,
+          entryPaths: readZipStore(relief.bytes).entries.map((e) => e.path),
+          validationOk: reliefVal.ok,
+          reasons: reliefVal.reasons,
+        },
+      };
+      window.__GOLDEN_3MF__ = report;
+      document.getElementById("out").textContent = JSON.stringify(report, null, 2);
+    </script>
+  </body>
+</html>

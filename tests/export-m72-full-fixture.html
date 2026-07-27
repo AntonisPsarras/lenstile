@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>M7.2 / 7.3 — Export full fixture 3MF samples (in-memory)</title>
+    <style>
+      body { font-family: ui-monospace, monospace; margin: 1.5rem; line-height: 1.45; }
+      pre { white-space: pre-wrap; background: #f4f6f8; padding: 1rem; border: 1px solid #cfd6dd; }
+      button { margin: 0.25rem 0.5rem 0.25rem 0; padding: 0.4rem 0.75rem; }
+      .ok { color: #1f6b45; }
+      .fail { color: #8f1d1d; }
+    </style>
+  </head>
+  <body>
+    <h1>Milestone 7.2 / 7.3 — full fixture 3MF (in-memory only)</h1>
+    <p>
+      Packages the geometry-debug fixture and reports metrics. Uses the test download
+      adapter — does <strong>not</strong> trigger a browser download or launch a slicer.
+      Click a button only to compute; the user downloads manually from the app if needed.
+    </p>
+    <button id="btn-flat" type="button">Generate Flat multicolor 3MF (report only)</button>
+    <button id="btn-relief" type="button">Generate Relief multicolor 3MF (report only)</button>
+    <button id="btn-base-color" type="button">Generate Flat with base #112233 (report only)</button>
+    <p id="status">Idle</p>
+    <pre id="out"></pre>
+    <script type="module">
+      import { parseGeometryDebugFixture } from "../src/geometry/geometry-debug-fixture.js";
+      import { generateTileGeometry } from "../src/geometry/generate-geometry.js";
+      import { packageMulticolorThreeMf } from "../src/export/three-mf-packaging.js";
+      import {
+        createTestDownloadAdapter,
+        setDownloadAdapter,
+      } from "../src/export/download.js";
+      import { DEFAULT_BASE_COLOR } from "../src/config.js";
+
+      const testAdapter = createTestDownloadAdapter();
+      setDownloadAdapter(testAdapter);
+
+      const status = document.getElementById("status");
+      const out = document.getElementById("out");
+      /** @type {string[]} */
+      const lines = [];
+      function log(msg) {
+        lines.push(String(msg));
+        out.textContent = lines.join("\n");
+      }
+
+      function fnv1aHex(bytes) {
+        let h = 0x811c9dc5;
+        for (let i = 0; i < bytes.length; i += 1) {
+          h ^= bytes[i];
+          h = Math.imul(h, 0x01000193);
+        }
+        return (h >>> 0).toString(16).padStart(8, "0");
+      }
+
+      async function loadAndBuild(surfaceStyle) {
+        const raw = await (await fetch("./fixtures/manual/Untitled_tile-geometry-debug.json")).json();
+        const fixture = parseGeometryDebugFixture(raw);
+        const geo = generateTileGeometry({
+          cleanedIndices: fixture.cleanedIndices,
+          width: fixture.width,
+          height: fixture.height,
+          surfaceStyle,
+          reliefStrengthId: fixture.reliefStrengthId || "standard",
+          heightOrder: fixture.heightOrder || "darkest-highest",
+          colorHeightLevels: fixture.colorHeightLevels || [],
+          effectivePalette: fixture.effectivePalette,
+        });
+        if (!geo.ok) throw new Error((geo.reasons || []).join("; "));
+        return { fixture, geo };
+      }
+
+      async function exportOne(label, surfaceStyle, baseColor, filenameHint) {
+        testAdapter.reset();
+        status.className = "";
+        status.textContent = `Building ${label}…`;
+        const { fixture, geo } = await loadAndBuild(surfaceStyle);
+        const colorMeshes = geo.colors.map((entry) => ({
+          paletteIndex: entry.paletteIndex,
+          mesh: entry.mesh,
+          color: { ...fixture.effectivePalette[entry.paletteIndex] },
+        }));
+        if (!geo.roof) throw new Error("Expected magnet-roof mesh for full fixture.");
+        const packaged = packageMulticolorThreeMf({
+          projectName: filenameHint || "Untitled tile",
+          baseMesh: geo.base,
+          roofMesh: geo.roof,
+          colorMeshes,
+          baseColor,
+          surfaceStyle,
+          geometryVersion: fixture.geometryAlgorithmVersion,
+        });
+        // Record via test adapter only — never initiates a browser download.
+        testAdapter.downloadBlob(packaged.blob, packaged.filename);
+        const hash = fnv1aHex(packaged.bytes);
+        log(`${label}: ${packaged.filename}`);
+        log(`  bytes=${packaged.bytes.byteLength} fnv1a=${hash}`);
+        log(`  objects=${packaged.manifest.objectCount} children=${packaged.manifest.childObjectCount} keepout=${packaged.manifest.keepoutObjectCount}`);
+        log(`  usedColors=${packaged.manifest.usedColors} (image colors; roof not counted)`);
+        log(`  keepoutCells=${geo.keepoutCellCount} validationOk=${packaged.validation.ok}`);
+        log(`  adapterInvocations=${testAdapter.getInvocationCount()} (in-memory only)`);
+        log(`  xmlBytes=${packaged.diagnostics.xmlByteLength}`);
+        status.className = "ok";
+        status.textContent = `Ready in memory: ${packaged.filename} (${packaged.bytes.byteLength} bytes). No browser download.`;
+        window.__LAST_3MF_REPORT__ = {
+          filename: packaged.filename,
+          byteLength: packaged.bytes.byteLength,
+          objectCount: packaged.manifest.objectCount,
+          keepoutObjectCount: packaged.manifest.keepoutObjectCount,
+          validationOk: packaged.validation.ok,
+          adapterInvocations: testAdapter.getInvocationCount(),
+        };
+        return packaged;
+      }
+
+      document.getElementById("btn-flat").addEventListener("click", async () => {
+        try {
+          await exportOne("Flat", "flat", { ...DEFAULT_BASE_COLOR }, "Untitled tile");
+        } catch (err) {
+          status.className = "fail";
+          status.textContent = String(err && err.message ? err.message : err);
+          log(String(err && err.stack ? err.stack : err));
+        }
+      });
+      document.getElementById("btn-relief").addEventListener("click", async () => {
+        try {
+          await exportOne("Relief", "relief", { ...DEFAULT_BASE_COLOR }, "Untitled tile");
+        } catch (err) {
+          status.className = "fail";
+          status.textContent = String(err && err.message ? err.message : err);
+          log(String(err && err.stack ? err.stack : err));
+        }
+      });
+      document.getElementById("btn-base-color").addEventListener("click", async () => {
+        try {
+          await exportOne("Flat base#112233", "flat", { r: 0x11, g: 0x22, b: 0x33 }, "Untitled tile base112233");
+        } catch (err) {
+          status.className = "fail";
+          status.textContent = String(err && err.message ? err.message : err);
+          log(String(err && err.stack ? err.stack : err));
+        }
+      });
+    </script>
+  </body>
+</html>

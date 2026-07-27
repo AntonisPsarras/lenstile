@@ -1,0 +1,188 @@
+.canvas-shell-wrap {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: size;
+  container-name: crop-preview;
+}
+
+.canvas-shell {
+  position: relative;
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: var(--tile-aspect-ratio);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface-recessed);
+  border: var(--border-width) solid var(--color-border-strong);
+}
+
+@supports (width: 1cqw) {
+  .canvas-shell {
+    width: min(100cqw, calc(100cqh * 148 / 53));
+    height: min(100cqh, calc(100cqw * 53 / 148));
+    min-height: 0;
+  }
+}
+
+@supports not (width: 1cqw) {
+  .canvas-shell {
+    min-height: 10rem;
+  }
+}
+
+.canvas-shell.is-drop-target {
+  outline: 2px dashed var(--color-action);
+  outline-offset: -6px;
+}
+
+.canvas-shell.is-replace-target {
+  outline: 2px dashed var(--color-warning);
+  outline-offset: -6px;
+}
+
+.canvas-shell.is-replace-target::after {
+  content: "Drop to replace image";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 3;
+  background: var(--color-overlay-replace);
+  color: var(--color-crop-frame);
+  font-weight: 700;
+  font-size: var(--font-size-md);
+  text-align: center;
+  padding: var(--space-4);
+}
+
+.crop-canvas {
+  width: 100%;
+  height: 100%;
+  cursor: default;
+  touch-action: none;
+}
+
+.crop-canvas.is-interactive {
+  cursor: grab;
+}
+
+.crop-canvas.is-interactive:active {
+  cursor: grabbing;
+}
+
+.image-drop-zone {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(var(--space-1), 2.5cqmin, var(--space-2));
+  padding: clamp(var(--space-2), 5cqmin, var(--space-5));
+  text-align: center;
+  cursor: pointer;
+  color: var(--color-crop-frame);
+  background: transparent;
+  border: var(--border-width) solid transparent;
+  box-sizing: border-box;
+  container-type: size;
+  container-name: drop-zone;
+  overflow: hidden;
+}
+
+.image-drop-zone[hidden] {
+  display: none !important;
+}
+
+.image-drop-zone:hover:not(.is-disabled),
+.image-drop-zone:focus-visible,
+.image-drop-zone.is-drag-active {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  background: var(--accent-surface-hover);
+  border-color: var(--accent-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 226, 178, 0.08),
+    0 0 0 1px var(--accent-hover-ring);
+}
+
+.image-drop-zone.is-error {
+  background: var(--danger-muted);
+}
+
+.image-drop-zone.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.drop-zone-title {
+  margin: 0;
+  font-size: clamp(0.95rem, 4.5cqmin, 1.45rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: var(--line-height-tight);
+}
+
+.drop-zone-or {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  opacity: 0.9;
+}
+
+.drop-zone-formats,
+.drop-zone-privacy {
+  margin: 0;
+  max-width: min(28rem, 100%);
+  font-size: clamp(var(--font-size-xs), 3.2cqmin, var(--font-size-sm));
+  color: var(--color-text-muted);
+  line-height: var(--line-height-body);
+}
+
+@container drop-zone (max-height: 220px) {
+  .drop-zone-privacy {
+    display: none;
+  }
+}
+
+@container drop-zone (max-height: 180px) {
+  .drop-zone-formats {
+    display: none;
+  }
+
+  .drop-zone-or {
+    display: none;
+  }
+}
+
+.drop-zone-error {
+  margin: var(--space-2) 0 0;
+  max-width: 28rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  background: var(--color-error-bg);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+}
+
+/* Shown by the browser only when canvas is unsupported (child of <canvas>). */
+.canvas-fallback {
+  margin: 0;
+  padding: var(--space-4);
+  color: var(--color-text-muted);
+}
+
+.control-section[hidden] {
+  display: none !important;
+}

@@ -1,0 +1,105 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Editors / IDEs
+.idea/
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+*.orig
+
+# Keep shared VS Code settings if added later; ignore local/user state
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+ENV/
+
+# Logs and dumps
+*.log
+*.stackdump
+crash-*.dmp
+hs_err_pid*
+
+# Test / coverage / performance artifacts (generated)
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+puppeteer/
+.browser-profiles/
+browser-profile/
+performance-reports/
+diagnostics-exports/
+*.perf.json
+
+# Manual testing screenshots (keep intentionally tracked assets elsewhere)
+screenshots/
+manual-screenshots/
+
+# Generated exports (never commit casual downloads)
+*.stl
+*.3mf
+*.zip
+!hardware/**/*.stl
+!tests/_slicer_stl/**/*.stl
+!tests/_slicer_3mf/**/*.3mf
+!tests/_manual_3mf/**/*.3mf
+!tests/fixtures/**/*.stl
+!tests/fixtures/**/*.3mf
+
+# Slicer projects / local print jobs
+*.3mf.bb
+*.bsp
+*.gcode
+*.gcode.3mf
+*.makerbot
+*.project.3mf
+BambuStudio/
+PrusaSlicer/
+Cura/
+OrcaSlicer/
+
+# Temporary JSON / local caches
+tmp/
+temp/
+.cache/
+*.local.json
+!tests/fixtures/**/*.json
+!tests/_slicer_stl/report.json
+
+# Build / distribution (not used by this project; ignore if created accidentally)
+dist/
+build/
+out/
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# Local static-server noise
+.http-server-pid

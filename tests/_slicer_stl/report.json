@@ -1,0 +1,52 @@
+{
+  "flatHash": "e7568185",
+  "flatOk": true,
+  "flatBounds": {
+    "minX": -74,
+    "minY": -26.5,
+    "minZ": 0,
+    "maxX": 74,
+    "maxY": 26.5,
+    "maxZ": 4,
+    "sizeX": 148,
+    "sizeY": 53,
+    "sizeZ": 4
+  },
+  "twoOk": true,
+  "twoBounds": {
+    "minX": -74,
+    "minY": -26.5,
+    "minZ": 0,
+    "maxX": 74,
+    "maxY": 26.5,
+    "maxZ": 4,
+    "sizeX": 148,
+    "sizeY": 53,
+    "sizeZ": 4
+  },
+  "saddleOk": true,
+  "saddleHash": "c8fab817",
+  "saddleBounds": {
+    "minX": -74,
+    "minY": -26.5,
+    "minZ": 0,
+    "maxX": 74,
+    "maxY": 26.5,
+    "maxZ": 4,
+    "sizeX": 148,
+    "sizeY": 53,
+    "sizeZ": 4
+  },
+  "fourColorCount": 4,
+  "fourColorOk": true,
+  "files": [
+    "flat-combined.stl",
+    "relief-two-level.stl",
+    "relief-saddle.stl",
+    "aligned-base.stl",
+    "aligned-color-0.stl",
+    "aligned-color-1.stl",
+    "aligned-color-2.stl",
+    "aligned-color-3.stl"
+  ]
+}

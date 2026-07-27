@@ -1,0 +1,293 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-body);
+  color: var(--color-text);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, var(--accent-muted), transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, var(--accent-muted), transparent 50%),
+    var(--color-bg);
+  margin: 0;
+}
+
+#app {
+  height: 100%;
+  min-height: 100dvh;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-3);
+  top: var(--space-3);
+  transform: translateY(-200%);
+  background: var(--color-surface-elevated);
+  color: var(--color-text);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  z-index: 100;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.noscript {
+  max-width: 48rem;
+  margin: var(--space-6) auto;
+  padding: var(--space-4);
+}
+
+/* Full-viewport application shell (Milestone 7.4) */
+.app-shell,
+.app-root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  min-height: 100dvh;
+  height: 100dvh;
+  margin: 0;
+  padding:
+    max(var(--space-3), var(--safe-top))
+    var(--space-4)
+    max(var(--space-3), var(--safe-bottom));
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--border-width) solid var(--color-border);
+  flex: 0 0 auto;
+}
+
+.brand-name {
+  margin: 0;
+  font-size: var(--font-size-brand);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-brand);
+  line-height: var(--line-height-tight);
+}
+
+.brand-tagline {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  max-width: 42rem;
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+}
+
+.workflow-nav,
+.step-nav {
+  flex: 0 0 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, var(--panel-width));
+  gap: var(--space-4);
+  align-items: stretch;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.preview-pane,
+.preview-panel,
+.settings-pane,
+.control-panel {
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  min-height: 0;
+}
+
+.preview-pane,
+.preview-panel {
+  position: relative;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--color-workspace);
+  min-height: 0;
+}
+
+.settings-pane,
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background: var(--bg-glass);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-panel), inset 0 1px 0 var(--glass-highlight);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .settings-pane,
+  .control-panel {
+    background: var(--color-surface-panel);
+  }
+}
+
+.settings-header {
+  flex: 0 0 auto;
+  padding: var(--space-3) var(--space-4) 0;
+}
+
+.settings-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: var(--space-3) var(--space-4);
+  overscroll-behavior: contain;
+}
+
+.settings-footer,
+.panel-footer.stage-continue {
+  flex: 0 0 auto;
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin-top: auto;
+  padding: var(--space-3) var(--space-4);
+  padding-bottom: calc(var(--space-3) + var(--safe-bottom));
+  background: linear-gradient(to top, var(--bg-glass) 72%, transparent);
+  border-top: var(--border-width) solid var(--border-subtle);
+  box-shadow: inset 0 1px 0 var(--glass-highlight);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .settings-footer,
+  .panel-footer.stage-continue {
+    background: linear-gradient(to top, var(--color-surface-panel) 70%, transparent);
+  }
+}
+
+.control-section {
+  display: none;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.control-section.is-active {
+  display: flex;
+}
+
+.pipeline-status {
+  margin: 0 0 var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  border: var(--border-width) solid var(--border-subtle);
+  box-shadow: var(--shadow-card), inset 0 1px 0 var(--glass-highlight);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.pipeline-status.is-updating {
+  border-color: var(--color-accent);
+}
+
+.pipeline-status.is-error {
+  border-color: var(--color-danger-border);
+  background: var(--color-error-bg);
+  color: var(--color-error);
+}
+
+.status-bar {
+  min-height: 1.5rem;
+}
+
+.live-region {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.toast-host,
+.app-status-host {
+  position: absolute;
+  bottom: calc(var(--space-3) + 1.5rem);
+  left: var(--space-3);
+  right: var(--space-3);
+  top: auto;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: min(26rem, calc(100% - 2 * var(--space-3)));
+  pointer-events: none;
+}
+
+.toast-host > * {
+  pointer-events: auto;
+}
+
+.privacy-banner {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.export-file-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin: var(--space-3) 0;
+}
+
+.export-file-card {
+  padding: var(--space-3);
+  border: var(--border-width) solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  box-shadow: var(--shadow-card), inset 0 1px 0 var(--glass-highlight);
+}
+
+.panel-goal {
+  margin-top: 0;
+}

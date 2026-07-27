@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>M7.2 — Reproduce full-size 3MF packaging failure</title>
+    <style>
+      body { font-family: ui-monospace, monospace; margin: 1.5rem; line-height: 1.45; }
+      pre { white-space: pre-wrap; background: #f4f6f8; padding: 1rem; border: 1px solid #cfd6dd; }
+      .ok { color: #1f6b45; }
+      .fail { color: #8f1d1d; }
+    </style>
+  </head>
+  <body>
+    <h1>Milestone 7.2 reproduction</h1>
+    <p id="status">Running…</p>
+    <pre id="out"></pre>
+    <script type="module">
+      import { parseGeometryDebugFixture } from "../src/geometry/geometry-debug-fixture.js";
+      import { generateTileGeometry } from "../src/geometry/generate-geometry.js";
+      import { validateMesh } from "../src/geometry/mesh-validation.js";
+      import { createThreeMfPackage } from "../src/export/three-mf.js";
+      import { validateThreeMfPackage } from "../src/export/three-mf-validate.js";
+      import { DEFAULT_BASE_COLOR } from "../src/config.js";
+
+      const status = document.getElementById("status");
+      const out = document.getElementById("out");
+      /** @type {string[]} */
+      const lines = [];
+      function log(msg) {
+        lines.push(String(msg));
+        out.textContent = lines.join("\n");
+      }
+
+      try {
+        const res = await fetch("./fixtures/manual/Untitled_tile-geometry-debug.json");
+        if (!res.ok) throw new Error(`Failed to load fixture: ${res.status}`);
+        const raw = await res.json();
+        const fixture = parseGeometryDebugFixture(raw);
+        log(`fixture: ${fixture.width}x${fixture.height} ${fixture.surfaceStyle}`);
+        log(`indices: ${fixture.cleanedIndices.length} (expect ${fixture.width * fixture.height})`);
+        log(`usedPaletteIndices: ${JSON.stringify(fixture.usedPaletteIndices)}`);
+        log(`geometryAlgorithmVersion: ${fixture.geometryAlgorithmVersion}`);
+
+        if (fixture.cleanedIndices.length !== fixture.width * fixture.height) {
+          throw new Error("cleanedIndices byte count mismatch");
+        }
+
+        const geo = generateTileGeometry({
+          cleanedIndices: fixture.cleanedIndices,
+          width: fixture.width,
+          height: fixture.height,
+          surfaceStyle: fixture.surfaceStyle,
+          reliefStrengthId: fixture.reliefStrengthId,
+          heightOrder: fixture.heightOrder,
+          colorHeightLevels: fixture.colorHeightLevels,
+          effectivePalette: fixture.effectivePalette,
+        });
+        log(`geometry ok=${geo.ok} colors=${geo.colors.length} tris=${geo.combined.triangles.length / 3}`);
+        if (!geo.ok) throw new Error(`geometry failed: ${(geo.reasons || []).join("; ")}`);
+
+        const baseValidation = validateMesh(geo.base);
+        log(`base validation ok=${baseValidation.ok}`);
+        if (!baseValidation.ok) throw new Error(baseValidation.reasons.join("; "));
+        for (const c of geo.colors) {
+          const v = validateMesh(c.mesh);
+          log(`color[${c.paletteIndex}] validation ok=${v.ok} tris=${c.mesh.triangles.length / 3}`);
+          if (!v.ok) throw new Error(`color[${c.paletteIndex}]: ${v.reasons.join("; ")}`);
+        }
+
+        const colorMeshes = geo.colors.map((entry) => {
+          const color = fixture.effectivePalette[entry.paletteIndex];
+          return {
+            paletteIndex: entry.paletteIndex,
+            mesh: entry.mesh,
+            color: { r: color.r, g: color.g, b: color.b },
+          };
+        });
+
+        // Same high-level packaging call as downloadThreeMfAction.
+        const packaged = createThreeMfPackage({
+          projectName: "Untitled tile",
+          baseMesh: geo.base,
+          roofMesh: geo.roof,
+          colorMeshes,
+          baseColor: DEFAULT_BASE_COLOR,
+          effectivePalette: fixture.effectivePalette,
+          surfaceStyle: fixture.surfaceStyle,
+          geometryVersion: fixture.geometryAlgorithmVersion,
+        });
+        log(`createThreeMfPackage succeeded: bytes=${packaged.bytes.byteLength} filename=${packaged.filename}`);
+        log(`manifest.objectCount=${packaged.manifest.objectCount} childObjectCount=${packaged.manifest.childObjectCount}`);
+
+        // Exact expectedObjectCount formula from export-controller.js (pre-fix).
+        const staleExpectedObjectCount = 1 + colorMeshes.length;
+        log(`export-controller expectedObjectCount (stale)=${staleExpectedObjectCount}`);
+        log(`correct expectedObjectCount=${3 + colorMeshes.length}`);
+
+        const validation = validateThreeMfPackage(packaged.bytes, {
+          expectedObjectCount: staleExpectedObjectCount,
+          expectedUsedColors: colorMeshes.length,
+          baseMesh: geo.base,
+          roofMesh: geo.roof,
+          colorMeshes,
+        });
+        log(`validation.ok=${validation.ok}`);
+        log(`validation.objectCount=${validation.objectCount}`);
+        log(`validation.reasons=${JSON.stringify(validation.reasons)}`);
+
+        if (!validation.ok) {
+          const err = new Error(validation.reasons.join(" ") || "3MF validation failed.");
+          err.name = "Error";
+          /** @type {any} */
+          const structured = {
+            code: "THREE_MF_VALIDATION_FAILED",
+            stage: "validate-model-xml",
+            message: err.message,
+            details: {
+              expectedObjectCount: staleExpectedObjectCount,
+              actualObjectCount: validation.objectCount,
+              reasons: validation.reasons,
+            },
+            causeName: err.name,
+            causeMessage: err.message,
+            stack: err.stack,
+          };
+          status.className = "fail";
+          status.textContent = "REPRODUCED FAILURE";
+          log("--- EXCEPTION ---");
+          log(JSON.stringify(structured, null, 2));
+          log("--- STACK ---");
+          log(err.stack || "(no stack)");
+          window.__M72_REPRO__ = { ok: false, structured, packagedBytes: packaged.bytes.byteLength };
+        } else {
+          status.className = "ok";
+          status.textContent = "UNEXPECTED SUCCESS (stale expectedObjectCount did not fail)";
+          window.__M72_REPRO__ = { ok: true };
+        }
+      } catch (err) {
+        status.className = "fail";
+        status.textContent = "UNEXPECTED EXCEPTION";
+        log(String(err && err.stack ? err.stack : err));
+        window.__M72_REPRO__ = {
+          ok: false,
+          unexpected: true,
+          name: err && err.name,
+          message: err && err.message,
+          stack: err && err.stack,
+        };
+      }
+    </script>
+  </body>
+</html>

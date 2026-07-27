@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Export sample 3MF files (in-memory)</title>
+  </head>
+  <body>
+    <pre id="out">Building…</pre>
+    <script type="module">
+      import { buildBaseTileMesh } from "../src/geometry/tile-base.js";
+      import { buildAllArtworkMeshes } from "../src/geometry/artwork-mesh.js";
+      import { buildAllReliefArtworkMeshes } from "../src/geometry/relief-mesh.js";
+      import { createThreeMfBytes } from "../src/export/three-mf.js";
+      import { validateThreeMfPackage } from "../src/export/three-mf-validate.js";
+      import { createBoxMesh } from "../src/geometry/primitives.js";
+      import { DEFAULT_BASE_COLOR } from "../src/config.js";
+      import {
+        createTestDownloadAdapter,
+        setDownloadAdapter,
+      } from "../src/export/download.js";
+
+      setDownloadAdapter(createTestDownloadAdapter());
+
+      function fnv1aHex(bytes) {
+        let h = 0x811c9dc5;
+        for (let i = 0; i < bytes.length; i += 1) {
+          h ^= bytes[i];
+          h = Math.imul(h, 0x01000193);
+        }
+        return (h >>> 0).toString(16).padStart(8, "0");
+      }
+
+      const roofMesh = createBoxMesh(-0.2, -0.2, 2.5, 0.2, 0.2, 4);
+      const palette = [
+        { r: 180, g: 40, b: 40 },
+        { r: 40, g: 120, b: 200 },
+        { r: 40, g: 160, b: 80 },
+        { r: 220, g: 180, b: 40 },
+      ];
+
+      const flatIndices = new Uint8Array([0, 0, 1, 1, 0, 0, 1, 1]);
+      const flatColors = buildAllArtworkMeshes(flatIndices, 4, 2);
+      const flatPkg = createThreeMfBytes({
+        projectName: "milestone7-flat-two-color",
+        baseMesh: buildBaseTileMesh(),
+        roofMesh,
+        colorMeshes: flatColors.map((c) => ({
+          paletteIndex: c.paletteIndex,
+          mesh: c.mesh,
+          color: palette[c.paletteIndex],
+        })),
+        baseColor: { ...DEFAULT_BASE_COLOR },
+        surfaceStyle: "flat",
+      });
+
+      const reliefIndices = new Uint8Array([0, 1, 2, 3, 0, 1, 2, 3]);
+      const tops = new Map([[0, 4.0], [1, 3.8], [2, 3.6], [3, 3.4]]);
+      const reliefColors = buildAllReliefArtworkMeshes(reliefIndices, 4, 2, tops);
+      const reliefPkg = createThreeMfBytes({
+        projectName: "milestone7-relief-four-color",
+        baseMesh: buildBaseTileMesh(),
+        roofMesh,
+        colorMeshes: reliefColors.map((c) => ({
+          paletteIndex: c.paletteIndex,
+          mesh: c.mesh,
+          color: palette[c.paletteIndex],
+        })),
+        baseColor: { ...DEFAULT_BASE_COLOR },
+        surfaceStyle: "relief",
+      });
+
+      const flatVal = validateThreeMfPackage(flatPkg.bytes, {
+        expectedObjectCount: 5,
+        expectedUsedColors: 2,
+        expectedChildObjectCount: 4,
+      });
+      const reliefVal = validateThreeMfPackage(reliefPkg.bytes, {
+        expectedObjectCount: 7,
+        expectedUsedColors: 4,
+        expectedChildObjectCount: 6,
+      });
+
+      const report = {
+        flat: {
+          filename: "standard-flat-two-color.3mf",
+          packageFilename: flatPkg.filename,
+          byteLength: flatPkg.bytes.byteLength,
+          fnv1a: fnv1aHex(flatPkg.bytes),
+          objects: flatPkg.manifest.objectCount,
+          childObjects: flatPkg.manifest.childObjectCount,
+          keepoutObjects: flatPkg.manifest.keepoutObjectCount,
+          assemblyObjectId: flatPkg.manifest.assemblyObjectId,
+          validationOk: flatVal.ok,
+          reasons: flatVal.reasons,
+        },
+        relief: {
+          filename: "standard-relief-four-color.3mf",
+          packageFilename: reliefPkg.filename,
+          byteLength: reliefPkg.bytes.byteLength,
+          fnv1a: fnv1aHex(reliefPkg.bytes),
+          objects: reliefPkg.manifest.objectCount,
+          childObjects: reliefPkg.manifest.childObjectCount,
+          keepoutObjects: reliefPkg.manifest.keepoutObjectCount,
+          assemblyObjectId: reliefPkg.manifest.assemblyObjectId,
+          validationOk: reliefVal.ok,
+          reasons: reliefVal.reasons,
+        },
+      };
+      window.__SAMPLE_3MF__ = report;
+      document.getElementById("out").textContent = JSON.stringify(report, null, 2);
+    </script>
+  </body>
+</html>

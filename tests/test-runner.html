@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LensTile — Tests</title>
+    <link rel="stylesheet" href="../styles/reset.css" />
+    <link rel="stylesheet" href="../styles/tokens.css" />
+    <link rel="stylesheet" href="../styles/layout.css" />
+    <link rel="stylesheet" href="../styles/components.css" />
+    <link rel="stylesheet" href="../styles/editor.css" />
+    <link rel="stylesheet" href="../styles/responsive.css" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --ok: #1f6b45;
+        --fail: #8f1d1d;
+        --muted: #5c6874;
+        --border: #c3ccd6;
+        --bg: #f7f9fb;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        background: var(--bg);
+        color: #172027;
+        padding: 1.5rem;
+      }
+      h1 { margin-top: 0; font-size: 1.35rem; }
+      #summary { font-weight: 700; margin-bottom: 1rem; }
+      #summary.ok { color: var(--ok); }
+      #summary.fail { color: var(--fail); }
+      .suite { margin: 1rem 0; }
+      .suite h2 { font-size: 1rem; margin: 0 0 0.35rem; }
+      .test {
+        display: flex;
+        gap: 0.75rem;
+        padding: 0.35rem 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.92rem;
+      }
+      .badge {
+        font-family: ui-monospace, monospace;
+        font-size: 0.75rem;
+        min-width: 3.5rem;
+      }
+      .badge.ok { color: var(--ok); }
+      .badge.fail { color: var(--fail); }
+      .error { color: var(--fail); white-space: pre-wrap; margin: 0.15rem 0 0.5rem 4.25rem; font-size: 0.85rem; }
+      .meta { color: var(--muted); font-size: 0.85rem; }
+      #current-test { margin: 0 0 1rem; }
+    </style>
+  </head>
+  <body>
+    <h1>LensTile — Test Runner</h1>
+    <p class="meta">Dependency-free browser harness. Open via a local static server.</p>
+    <div id="summary">Running…</div>
+    <div id="current-test" class="meta">Loading tests...</div>
+    <div id="results-host"></div>
+    <script type="module">
+      import { runAllTests } from "./test-utils.js";
+      import {
+        createTestDownloadAdapter,
+        setDownloadAdapter,
+      } from "../src/export/download.js";
+      import "./state-tests.js";
+      import "./crop-transform-tests.js";
+      import "./validation-ui-tests.js";
+      import "./network-policy-tests.js";
+      import "./quantize-tests.js";
+      import "./image-import-tests.js";
+      import "./profile-tests.js";
+      import "./mask-cleanup-tests.js";
+      import "./geometry-tests.js";
+      import "./stl-tests.js";
+      import "./export-readiness-tests.js";
+      import "./zip-tests.js";
+      import "./crc32-tests.js";
+      import "./three-mf-tests.js";
+      import "./ui-workflow-tests.js";
+      import "./relief-tests.js";
+      import "./manifold-pinch-tests.js";
+      import "./combined-relief-tests.js";
+      import "./magnet-backing-tests.js";
+      import "./processing-detail-tests.js";
+      import "./workflow-pipeline-tests.js";
+      import "./workflow-fsm-tests.js";
+      import "./layout-responsive-tests.js";
+      import "./workflow-ux-tests.js";
+      import "./diagnostics-tests.js";
+
+      // All harness tests must use the in-memory download adapter (before runAllTests).
+      setDownloadAdapter(createTestDownloadAdapter());
+
+      const summary = document.getElementById("summary");
+      const currentTest = document.getElementById("current-test");
+      const resultsHost = document.getElementById("results-host");
+      const resultsRoot = resultsHost.attachShadow({ mode: "open" });
+      const resultsEl = document.createElement("div");
+      resultsRoot.appendChild(resultsEl);
+
+      async function waitForHarnessStyles() {
+        const styles = [...document.querySelectorAll('link[rel="stylesheet"]')];
+        await Promise.all(styles.map((link) => {
+          if (link.sheet) return Promise.resolve();
+          return new Promise((resolve) => {
+            link.addEventListener("load", resolve, { once: true });
+            link.addEventListener("error", resolve, { once: true });
+          });
+        }));
+      }
+
+      const rowsBySuite = new Map();
+      function appendResult(item) {
+        let section = rowsBySuite.get(item.suite);
+        if (!section) {
+          section = document.createElement("section");
+          section.className = "suite";
+          const h2 = document.createElement("h2");
+          h2.textContent = item.suite;
+          section.appendChild(h2);
+          rowsBySuite.set(item.suite, section);
+          resultsEl.appendChild(section);
+        }
+        const row = document.createElement("div");
+        row.className = "test";
+        const badge = document.createElement("span");
+        badge.className = `badge ${item.ok ? "ok" : "fail"}`;
+        badge.textContent = item.ok ? "ok" : "FAIL";
+        const name = document.createElement("span");
+        name.textContent = `${item.name} (${item.ms.toFixed(1)} ms)`;
+        row.append(badge, name);
+        section.appendChild(row);
+        if (!item.ok) {
+          const err = document.createElement("pre");
+          err.className = "error";
+          err.textContent = item.error;
+          section.appendChild(err);
+        }
+      }
+
+      await waitForHarnessStyles();
+
+      const { passed, failed, results, diagnostics } = await runAllTests({
+        onTestStart(item) {
+          currentTest.textContent = `Running: ${item.suite} — ${item.name}`;
+        },
+        onTestComplete: appendResult,
+      });
+
+      summary.textContent = failed
+        ? `FAILED — ${failed} failed, ${passed} passed`
+        : `PASSED — ${passed} passed, 0 failed`;
+      summary.className = failed ? "fail" : "ok";
+
+      currentTest.textContent = `Complete: ${results.length} tests; `
+        + `${diagnostics.unexpected.length} unexpected browser errors.`;
+
+      document.title = failed ? `FAIL (${failed}) — Tests` : `PASS (${passed}) — Tests`;
+    </script>
+  </body>
+</html>

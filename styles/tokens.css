@@ -1,0 +1,169 @@
+:root {
+  color-scheme: dark;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  /* Typography (system stack only) */
+  --font-sans: system-ui, "Segoe UI", "Helvetica Neue", Helvetica, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Segoe UI Mono", Menlo, Consolas, monospace;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.5rem;
+  --font-size-brand: clamp(1.2rem, 1.6vw, 1.55rem);
+  --line-height-tight: 1.2;
+  --line-height-body: 1.5;
+
+  /* Surfaces — Warm Workshop Amber */
+  --bg-page: #0f0e0c;
+  --bg-workspace: #12110f;
+  --bg-panel: #191713;
+  --bg-elevated: #201d18;
+  --bg-inset: #0c0c0b;
+  --bg-hover: #29241d;
+  --bg-selected: #30271a;
+  --bg-glass: rgba(40, 35, 28, 0.72);
+
+  /* Borders */
+  --border-subtle: rgba(196, 164, 116, 0.16);
+  --border-default: #40392f;
+  --border-elevated: rgba(219, 174, 101, 0.28);
+  --border-active: #a96b18;
+  --glass-highlight: rgba(255, 226, 178, 0.18);
+  --border-width: 1px;
+
+  /* Typography colors */
+  --text-primary: #eee8dc;
+  --text-secondary: #c6bdae;
+  --text-muted: #91887a;
+  --text-disabled: #746d62;
+  --text-inverse: #17120a;
+  --text-accent: #d89a3d;
+
+  /* Brand */
+  --accent: #d58a25;
+  --accent-hover: #e49a34;
+  --accent-active: #b86f16;
+  --accent-muted: rgba(213, 138, 37, 0.14);
+  --accent-surface-hover: rgba(213, 138, 37, 0.08);
+  --accent-border: rgba(213, 138, 37, 0.62);
+  --accent-hover-ring: rgba(213, 138, 37, 0.04);
+  --focus-ring-color: rgba(231, 163, 69, 0.38);
+
+  /* Semantic */
+  --success: #8fae59;
+  --success-muted: rgba(143, 174, 89, 0.13);
+  --warning: #d6a548;
+  --warning-muted: rgba(214, 165, 72, 0.14);
+  --danger: #c56f62;
+  --danger-muted: rgba(197, 111, 98, 0.13);
+  --info: #8a9eaa;
+
+  /* Disabled */
+  --disabled-surface: #1b1916;
+  --disabled-border: #302c26;
+
+  /* Radius */
+  --radius-frame: 12px;
+  --radius-panel: 9px;
+  --radius-card: 7px;
+  --radius-control: 6px;
+  --radius-sm: var(--radius-control);
+  --radius-md: var(--radius-card);
+  --radius-lg: var(--radius-frame);
+
+  /* Shadows */
+  --shadow-panel: 0 10px 30px rgba(0, 0, 0, 0.20);
+  --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.16);
+  --shadow-control:
+    inset 0 1px 0 rgba(255, 235, 198, 0.06),
+    0 2px 5px rgba(0, 0, 0, 0.18);
+  --shadow-soft: var(--shadow-panel);
+
+  /* Glass */
+  --glass-blur: 10px;
+
+  /* Motion */
+  --motion-fast: 100ms;
+  --motion-standard: 140ms;
+  --motion-duration: var(--motion-standard);
+  --motion-duration-fast: var(--motion-fast);
+  --motion-ease: ease;
+
+  /* Focus */
+  --focus-ring: 2px solid var(--accent);
+  --focus-offset: 2px;
+
+  /* Overlay / crop chrome */
+  --color-overlay-dim: rgba(12, 12, 11, 0.62);
+  --color-overlay-soft: rgba(12, 12, 11, 0.35);
+  --color-overlay-replace: rgba(12, 12, 11, 0.55);
+  --color-crop-frame: #eee8dc;
+  --color-magnet-guide: rgba(216, 154, 61, 0.45);
+
+  /* Printability issue overlay (diagnostic UI only) */
+  --color-issue-island: #dc3c3c;
+  --color-issue-hole: #2878dc;
+  --color-issue-feature: #e6a014;
+  --color-issue-gap: #8c3ccc;
+
+  /* Compatibility aliases for existing --color-* consumers */
+  --color-bg: var(--bg-page);
+  --color-bg-accent: var(--bg-elevated);
+  --color-workspace: var(--bg-workspace);
+  --color-surface: var(--bg-panel);
+  --color-surface-elevated: var(--bg-elevated);
+  --color-surface-panel: var(--bg-panel);
+  --color-surface-recessed: var(--bg-inset);
+  --color-border: var(--border-default);
+  --color-border-strong: var(--border-elevated);
+  --color-text: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-brand: var(--text-accent);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-action: var(--accent);
+  --color-action-text: var(--text-inverse);
+  --color-action-secondary-bg: transparent;
+  --color-on-accent: var(--text-inverse);
+  --color-success: var(--success);
+  --color-success-bg: var(--success-muted);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-muted);
+  --color-error: var(--danger);
+  --color-error-bg: var(--danger-muted);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-muted);
+  --color-danger-border: var(--danger);
+
+  /* Controls */
+  --control-height: 2.75rem;
+  --control-height-compact: 2.25rem;
+  --touch-target-min: 44px;
+
+  /* Layout */
+  --tile-aspect-ratio: 148 / 53;
+  --app-max-width: none;
+  --panel-width: clamp(360px, 28vw, 480px);
+  --header-height: auto;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration: 0ms;
+    --motion-duration-fast: 0ms;
+    --motion-fast: 0ms;
+    --motion-standard: 0ms;
+  }
+}

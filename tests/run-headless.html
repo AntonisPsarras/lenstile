@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Headless test dump</title>
+  </head>
+  <body>
+    <pre id="out">running</pre>
+    <script type="module">
+      import { runAllTests } from "./test-utils.js";
+      import "./state-tests.js";
+      import "./crop-transform-tests.js";
+      import "./validation-ui-tests.js";
+      import "./network-policy-tests.js";
+      import "./quantize-tests.js";
+      import "./image-import-tests.js";
+      import "./profile-tests.js";
+      import "./mask-cleanup-tests.js";
+      import "./geometry-tests.js";
+      import "./stl-tests.js";
+      import "./export-readiness-tests.js";
+      import "./zip-tests.js";
+      import "./three-mf-tests.js";
+      import "./ui-workflow-tests.js";
+      import "./relief-tests.js";
+      import "./manifold-pinch-tests.js";
+      import "./combined-relief-tests.js";
+
+      const out = document.getElementById("out");
+      try {
+        const { passed, failed, results } = await runAllTests();
+        const failures = results
+          .filter((r) => !r.ok)
+          .map((r) => `${r.suite} :: ${r.name}\n${r.error || ""}`);
+        const payload = {
+          passed,
+          failed,
+          total: passed + failed,
+          failures,
+        };
+        out.textContent = "RESULT_JSON:" + JSON.stringify(payload);
+        document.title = failed ? `FAIL ${failed}` : `PASS ${passed}`;
+      } catch (err) {
+        out.textContent = "RESULT_JSON:" + JSON.stringify({
+          passed: 0,
+          failed: 1,
+          total: 1,
+          failures: [String(err && err.stack || err)],
+        });
+        document.title = "ERROR";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LensTile — Release baseline</title>
+    <link rel="stylesheet" href="./baseline-runner.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Release baseline diagnostics</h1>
+      <p>
+        Development-only, in-memory measurements. Nothing runs until the button is
+        pressed; no file is downloaded or persisted.
+      </p>
+      <button id="run-baseline" type="button">Run baseline</button>
+      <p id="status" role="status">Idle. Long-task support has not been checked.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Case</th><th>Total ms</th><th>Geometry ms</th><th>Write/package ms</th>
+              <th>Vertices</th><th>Triangles</th><th>Final bytes</th>
+            </tr>
+          </thead>
+          <tbody id="results"></tbody>
+        </table>
+      </div>
+      <h2>Privacy-safe JSON</h2>
+      <p>Values under <code>logicalEstimates</code> are estimates, not measured heap or peak memory.</p>
+      <pre id="report">No report yet.</pre>
+    </main>
+    <script type="module" src="./baseline-runner.js"></script>
+  </body>
+</html>

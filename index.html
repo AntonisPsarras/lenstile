@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="LensTile — open-source magnetic image tiles for modular glasses cases. Local-first; images never leave your device."
+    />
+    <meta name="application-name" content="LensTile" />
+    <meta name="color-scheme" content="dark" />
+    <title>LensTile</title>
+    <link rel="stylesheet" href="styles/reset.css" />
+    <link rel="stylesheet" href="styles/tokens.css" />
+    <link rel="stylesheet" href="styles/layout.css" />
+    <link rel="stylesheet" href="styles/components.css" />
+    <link rel="stylesheet" href="styles/editor.css" />
+    <link rel="stylesheet" href="styles/responsive.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <div id="app"></div>
+    <noscript>
+      <p class="noscript">
+        LensTile requires JavaScript enabled in your browser. All processing stays on your device.
+      </p>
+    </noscript>
+    <script type="module">
+      import("./src/app.js").catch((err) => {
+        const root = document.getElementById("app");
+        const message = err instanceof Error ? err.message : String(err);
+        console.error("[LensTile] module load failed:", err);
+        if (root) {
+          root.textContent = `LensTile could not start: ${message}`;
+        }
+      });
+    </script>
+  </body>
+</html>

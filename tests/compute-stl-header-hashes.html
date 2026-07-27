@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>LensTile — recompute STL header hashes</title>
+  </head>
+  <body>
+    <pre id="out">Computing…</pre>
+    <script type="module">
+      import { createBoxMesh } from "../src/geometry/primitives.js";
+      import { writeBinaryStl } from "../src/export/binary-stl.js";
+      import { buildCombinedTileMesh } from "../src/geometry/tile-base.js";
+      import { generateCombinedReliefTileMesh } from "../src/geometry/relief-mesh.js";
+      import { GOLDEN_RELIEF_TINY } from "./fixtures/relief-golden.js";
+      import { GOLDEN_RELIEF_SADDLE } from "./fixtures/relief-saddle-golden.js";
+
+      function fnv1aHex(buffer) {
+        const bytes = new Uint8Array(buffer);
+        let h = 0x811c9dc5;
+        for (let i = 0; i < bytes.length; i += 1) {
+          h ^= bytes[i];
+          h = Math.imul(h, 0x01000193);
+        }
+        return (h >>> 0).toString(16).padStart(8, "0");
+      }
+
+      const box = writeBinaryStl(createBoxMesh(0, 0, 0, 10, 20, 30));
+      const combined = writeBinaryStl(buildCombinedTileMesh());
+      const reliefTiny = writeBinaryStl(generateCombinedReliefTileMesh({
+        width: GOLDEN_RELIEF_TINY.width,
+        height: GOLDEN_RELIEF_TINY.height,
+        indices: Uint8Array.from(GOLDEN_RELIEF_TINY.indices),
+        topHeightByPaletteIndex: new Map(
+          Object.entries(GOLDEN_RELIEF_TINY.topHeightByPaletteIndex).map(([k, v]) => [Number(k), v]),
+        ),
+      }));
+      const saddle = writeBinaryStl(generateCombinedReliefTileMesh({
+        width: GOLDEN_RELIEF_SADDLE.width,
+        height: GOLDEN_RELIEF_SADDLE.height,
+        indices: Uint8Array.from(GOLDEN_RELIEF_SADDLE.indices),
+        topHeightByPaletteIndex: new Map(
+          Object.entries(GOLDEN_RELIEF_SADDLE.topHeightByPaletteIndex).map(([k, v]) => [Number(k), v]),
+        ),
+      }));
+
+      const report = {
+        GOLDEN_BOX_STL_FNV1A: { old: "622eedde", new: fnv1aHex(box), bytes: box.byteLength },
+        GOLDEN_COMBINED_TILE: { old: "e7568185", new: fnv1aHex(combined), bytes: combined.byteLength },
+        GOLDEN_RELIEF_TINY: { old: "3fd8a805", new: fnv1aHex(reliefTiny), bytes: reliefTiny.byteLength },
+        GOLDEN_RELIEF_SADDLE: { old: "c8fab817", new: fnv1aHex(saddle), bytes: saddle.byteLength },
+        note: "Header-only rename; triangle payloads unchanged",
+      };
+      document.getElementById("out").textContent = JSON.stringify(report, null, 2);
+      window.__STL_HEADER_HASHES__ = report;
+    </script>
+  </body>
+</html>

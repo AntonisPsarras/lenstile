@@ -1,0 +1,29 @@
+{
+  "format": "open-tile-geometry-debug",
+  "formatVersion": 1,
+  "exportedAt": "2026-07-24T00:00:00.000Z",
+  "expectedFailingObject": "color[0]",
+  "tileVersion": "1",
+  "geometryAlgorithmVersion": 2,
+  "width": 3,
+  "height": 3,
+  "surfaceStyle": "flat",
+  "reliefStrengthId": "standard",
+  "heightOrder": "darkest-highest",
+  "colorHeightLevels": [],
+  "usedPaletteIndices": [0, 1],
+  "generatedPalette": [
+    { "r": 20, "g": 20, "b": 20 },
+    { "r": 220, "g": 220, "b": 220 }
+  ],
+  "effectivePalette": [
+    { "r": 20, "g": 20, "b": 20 },
+    { "r": 220, "g": 220, "b": 220 }
+  ],
+  "sourceRevision": 0,
+  "printabilityRevision": 0,
+  "geometryRevision": 0,
+  "indicesEncoding": "raw",
+  "cleanedIndices": [1, 0, 0, 0, 1, 0, 0, 0, 0],
+  "notes": "Reduced diagonal-pinch fixture (3×3 bits=17). Legacy grid vertex weld produced color[0] non-manifold (boundary=0, nonManifold=1). Three such pinches yield nonManifold=3 as seen in the browser UI."
+}

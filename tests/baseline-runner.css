@@ -1,0 +1,48 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 1.5rem;
+}
+
+main {
+  max-width: 90rem;
+  margin: 0 auto;
+}
+
+button {
+  padding: 0.65rem 1rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #77808a;
+  padding: 0.4rem;
+  text-align: right;
+}
+
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+
+pre {
+  max-height: 32rem;
+  overflow: auto;
+  padding: 1rem;
+  border: 1px solid #77808a;
+  white-space: pre-wrap;
+}
