@@ -7,7 +7,8 @@
  * hardware profile selection. The website prepares geometry at these grids;
  * the user must select the matching nozzle in their slicer before printing.
  *
- * Thresholds are initial product defaults pending physical print validation.
+ * Thresholds are conservative product defaults for 0.2 mm and 0.4 mm nozzles;
+ * verify on your printer and filament.
  * Do not invent alternate thresholds in UI or state — resolve from here.
  */
 

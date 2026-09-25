@@ -542,7 +542,7 @@ export function createThreeMfPackage(opts) {
 }
 
 /**
- * Legacy placeholder name — prefer createThreeMfPackage / createThreeMfBytes.
+ * Compatibility alias for createThreeMfPackage / createThreeMfBytes.
  * @param {Parameters<typeof createThreeMfPackage>[0]} [opts]
  */
 export function writeThreeMf(opts) {

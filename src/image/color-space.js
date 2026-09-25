@@ -69,7 +69,7 @@ export function roundChannel(value) {
 }
 
 /**
- * Lab conversion is deferred; RGB clustering does not require it.
+ * Lab conversion is unused; RGB clustering does not require it.
  * @throws {Error}
  */
 export function rgbToLab() {

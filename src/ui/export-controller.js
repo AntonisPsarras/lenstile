@@ -76,7 +76,7 @@ let threeMfPackagingInFlight = null;
 let lastThreeMfDiagnostics = null;
 
 /**
- * True when running on a local static server (development diagnostics).
+ * True on localhost; enables local packaging diagnostics UI.
  * @returns {boolean}
  */
 export function isThreeMfDevDiagnosticsEnabled() {
@@ -444,7 +444,7 @@ export function getThreeMfTechnicalDetailsText() {
 }
 
 /**
- * Download packaging diagnostics JSON (development / Technical details).
+ * Download packaging diagnostics JSON (Technical details).
  */
 export function downloadThreeMfDiagnosticsAction() {
   const payload = lastThreeMfDiagnostics || buildThreeMfDiagnosticsJson({
@@ -702,7 +702,7 @@ export function setBaseColorAction(color) {
 
 /**
  * Download a local JSON fixture that reproduces mesh generation for the
- * currently accepted cleaned design. Development / Technical details only.
+ * currently accepted cleaned design. Technical details only.
  * Does not include the source image and never uploads.
  */
 export function downloadGeometryDebugCaseAction() {

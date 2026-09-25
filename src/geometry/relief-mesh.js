@@ -10,7 +10,7 @@
  * Touching-volume note (multicolor): adjacent colors share XY boundaries and may
  * have coplanar opposing side faces up to the shorter top; the taller object
  * exposes an additional vertical step. Slicers typically treat this as aligned
- * multi-body geometry for separate STLs / future 3MF.
+ * multi-body geometry for separate STLs / multicolor 3MF.
  */
 
 import { TILE_V1 } from "./tile-spec.js";

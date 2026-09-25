@@ -53,11 +53,11 @@ After browser tests pass for geometry milestones, spot-check generated STLs in B
 
 Record import success, dimensions (148 × 53 × 4), whether the parent assembly prevents “multi-part object” reposition dialogs, object count (one logical tile with base + color parts), whether an automatic repair warning appears, visibility of relief steps and magnet recesses, whether preview colors appear, and whether filament assignment still needs to be performed manually. Do not claim “no repair warning”, “colors assigned correctly”, or “AMS auto-mapped” unless observed in the slicer UI. Local edge-incidence validation supplements unclear slicer repair status.
 
-## What to test later
+## Optional follow-up coverage
 
-| Milestone | Focus |
-|-----------|--------|
-| M8 | Project JSON round-trip, offline SW behavior |
+| Area | Focus |
+|------|--------|
+| Project files / offline | Project JSON round-trip, offline SW behavior |
 
 ## Running
 

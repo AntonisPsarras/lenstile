@@ -16,8 +16,9 @@ device**.
 
 ## What may be stored locally
 
-- The current app keeps session state in memory until you export a file
-- Project save/load and IndexedDB persistence are **not** enabled yet
+- Session state remains in memory until you export a file
+- This product does not persist projects between sessions (no project save/load
+  or IndexedDB)
 - Downloaded STL / 3MF / JSON files are saved where you choose via the browser
   download UI (only after an explicit click)
 
@@ -32,14 +33,14 @@ device**.
 
 ## Network
 
-The application source does not perform intended runtime network requests. A
-future offline mode may cache **same-origin** files only; that is not image upload.
+The application source does not perform intended runtime network requests. This
+product does not install an offline cache; that is not image upload.
 
 ## Clearing data
 
-Until persistence is added, closing the tab clears in-memory state. Exported
-files on disk must be deleted manually by you. You can also clear site data for
-this origin in your browser settings.
+Closing the tab clears in-memory state. Exported files on disk remain until you
+delete them. You can also clear site data for this origin in your browser
+settings.
 
 ## Contact
 

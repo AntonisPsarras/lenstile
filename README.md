@@ -168,7 +168,8 @@ Select the matching nozzle in your slicer. Layer height remains a slicer setting
 ## Compatible glasses-case requirement
 
 Tiles are sized for a compatible modular glasses case with matching magnet
-layout. Confirm fit with your case before printing large batches.
+layout (±25 mm centers, Ø8.5 × 2.5 mm recesses). Confirm fit with your case
+before printing large batches.
 
 ```text
 MakerWorld glasses-case link: https://makerworld.com/en/models/3100733-lenstile-modular-glasses-case-with-custom-tiles#profileId-3495008
@@ -208,11 +209,14 @@ See `hardware/TILE_V1_SPEC.md` for inspection notes and confidence.
 
 ## Known limitations
 
-- Project save/load and offline service worker are not shipped yet.
-- Printability thresholds are initial defaults pending physical print validation.
+- Project save/load and offline install are not included. Session state stays in
+  memory until you download STL/3MF.
+- Printability thresholds are conservative defaults for 0.2 mm and 0.4 mm
+  nozzles; verify on your printer and filament.
 - Relief multi-height junctions may insert a tiny offset apex for manifold closure.
 - Multicolor RGB intent may not match physically loaded filaments.
-- Geometry is validated locally; slicer auto-repair UX still needs human confirmation.
+- Geometry is validated locally; confirm slicer import and any repair dialog on
+  a test file for your workflow.
 
 ## Browser support
 
@@ -275,9 +279,12 @@ MIT — see `LICENSE`.
 
 ## Roadmap
 
-See `ROADMAP.md`. Core export and workflow milestones through 7.4.1 / 8.2.1 are
-complete. Offline persistence and public release follow-up items remain.
+See `ROADMAP.md`. The shipping import → colors → printable → STL/3MF workflow
+is complete. Remaining roadmap items are optional follow-ups, not release
+blockers.
 
 ## Project status
 
-LensTile is an open-source, local-first tool, ready for public reliable use.
+LensTile is an open-source, local-first browser tool for Tile V1 magnetic image
+tiles, ready for public use. Validate fit and print quality on your hardware
+before batch printing.

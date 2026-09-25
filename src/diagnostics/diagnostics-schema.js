@@ -1,6 +1,5 @@
 /**
- * Privacy-safe, development-only baseline diagnostics schema.
- * Values are intentionally limited to numbers, booleans, and fixed identifiers.
+ * Privacy-safe baseline diagnostics schema (numbers, booleans, and fixed identifiers).
  */
 
 export const DIAGNOSTICS_SCHEMA_VERSION = 1;

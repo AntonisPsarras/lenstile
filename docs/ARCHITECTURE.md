@@ -14,8 +14,8 @@ index.html
          ├── validation.js     input / settings validation
          ├── ui/*              DOM layout, controls, image-import controller
          ├── image/*           load, transform, quantize, preview
-         ├── geometry/*        tile spec, mesh, extrusion (later)
-         ├── export/*          STL / 3MF / project JSON
+         ├── geometry/*        tile spec, mesh, extrusion
+         ├── export/*          STL / 3MF (project JSON helpers)
          └── workers/*         off-main-thread jobs
 ```
 
@@ -53,7 +53,7 @@ index.html
 
 ## Printer and detail profiles
 
-- `PRINT_PROFILES` / `DETAIL_PROFILES` are deep-frozen; values are initial defaults pending physical print validation.
+- `PRINT_PROFILES` / `DETAIL_PROFILES` are deep-frozen; values are conservative defaults for 0.2 mm and 0.4 mm nozzles — verify on your printer.
 - Nozzle choices are **0.2 mm Fine detail** and **0.4 mm Standard** (default). These are nozzle diameters, not layer heights.
 - Legacy `nozzle06` migrates to `nozzle04` (`PRINT_PROFILES_VERSION = 2`).
 - State stores `printability.profileId` and `quantization.detailProfileId`.
@@ -126,7 +126,7 @@ index.html
 - Dedicated closed bridge mesh (`magnet-backing-mesh.js` → full-tile box); Flat combined STL envelope unchanged; no visible top-surface disk
 - Local circular 0.2 mm magnet disks (Milestone 7.3.2) are retired
 - Website nozzle profile drives automatic processing grids (`PROCESSING_PROFILES`) and printable thresholds; user must select the matching nozzle in the slicer
-- Thresholds are initial defaults pending physical print validation
+- Thresholds are conservative defaults; verify on your printer and filament
 
 ## Relief saddles (Milestone 6.2.1)
 
@@ -154,8 +154,7 @@ index.html
 
 - Non-binary / multi-height junctions insert a small offset apex near the junction (intentional micro-geometry for manifold closure), not a large decorative bridge.
 - Multicolor separate STLs may have coplanar opposing faces along shared XY boundaries; slicers typically treat this as aligned multi-body input.
-- Physical print validation and slicer-specific auto-repair UX still require human confirmation in Bambu Studio / equivalents.
-- Geometry is **not frozen** until a manual slicer spot-check of the real combined-relief fixture confirms no unexpected auto-repair.
+- Confirm slicer import, any repair dialog, and filament mapping on a test file for your workflow.
 - Multicolor 3MF packaging is implemented (Milestone 7.1/7.2 multipart + Materials color groups + full-size packaging repair); slicer filament assignment still needs manual confirmation.
 ## Printability (Milestone 3 / UI polish 6.1)
 

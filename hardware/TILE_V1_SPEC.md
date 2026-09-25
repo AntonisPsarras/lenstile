@@ -137,11 +137,11 @@ With the inspected mesh: `centerX_cad = -482.5`, `centerY_cad = -210.0`, `zMin_c
 - Exact manufacturing tolerance band for the case pocket (not in STL).
 - Whether future tile revisions will add corner fillets.
 - Artwork clearance relative to magnet recesses (product policy; default: artwork must not undercut recess volumes).
-- Preferred print orientation for end users (document in export docs later).
+- Preferred print orientation for end users.
 
 ## Manufacturing tolerances (working guidance)
 
-Until physical measurement notes are added:
+Working mesh-validation tolerances (not certified metrology):
 
 | Feature | Working tolerance |
 |---------|-------------------|
@@ -173,5 +173,5 @@ These are **guidance for mesh validation warnings**, not certified metrology.
 - Exported single-color STL may optionally include the tile base derived from (or aligned to) the reference geometry after recentering.
 - Multicolor parts must share the same origin and units (millimetres).
 - Do not bake the CAD AABB offset (−482.5, −210.0, …) into the public project format.
-- **Milestones 4–6:** procedural Tile V1 meshes are generated in-app (combined STL + aligned base/color STLs). `Body122.stl` remains the inspection reference and must not be modified. Magnet recesses use `MAGNET_CIRCLE_SEGMENTS = 64`. Physical print validation is still required before treating exports as production-ready.
+- **Milestones 4–6:** procedural Tile V1 meshes are generated in-app (combined STL + aligned base/color STLs). `Body122.stl` remains the inspection reference and must not be modified. Magnet recesses use `MAGNET_CIRCLE_SEGMENTS = 64`. Confirm fit and print quality on your printer and case before batch printing.
 - **Milestone 7.1 — multicolor 3MF:** packages the same validated base + used artwork meshes as one parent multipart assembly (millimetre units, identity transforms, shared origin, one build item). Uses Materials-extension `m:colorgroup` color resources for design intent — not Core `basematerials`/`displaycolor` as printable color. No vendor-specific Bambu/Prusa/Cura/Orca extensions, profiles, or thumbnails. Standard RGB does not auto-select AMS slots; confirm import and filament mapping manually. Separate aligned STLs remain the fallback.

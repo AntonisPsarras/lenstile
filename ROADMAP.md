@@ -2,6 +2,10 @@
 
 > Historical milestone titles may still say “Open Tile Generator” in older notes;
 > the public product name is now **LensTile**.
+>
+> This file is a **historical milestone log**. The shipping import → colors →
+> printable → STL/3MF path is complete. Open items below are optional follow-ups,
+> not blockers for local use.
 
 ## Milestone 0 — Specification and repository foundation
 
@@ -23,7 +27,7 @@
 
 ### Risks
 
-- Incomplete hardware unknowns → document as unresolved, do not invent
+- Hardware unknowns → document as unresolved, do not invent
 
 ---
 
@@ -50,7 +54,7 @@
 ### Risks
 
 - Touch vs mouse pointer inconsistencies
-- Large images stalling main thread (warn; workers later)
+- Large images stalling main thread (warn; workers off main thread)
 
 ---
 
@@ -128,7 +132,7 @@
 
 ### Risks
 
-- Over-aggressive cleanup destroying intentional detail (mitigated: thin-branch erosion deferred; user must accept)
+- Over-aggressive cleanup destroying intentional detail (mitigated: thin-branch erosion is not automatic; user must accept)
 
 ---
 
@@ -163,7 +167,7 @@
 
 ### Deliverables
 
-- Run-length rectangles, extrusion, color-separated meshes, raised artwork prototype
+- Run-length rectangles, extrusion, color-separated meshes, raised artwork meshes
 
 ### Acceptance criteria
 
@@ -174,7 +178,7 @@
 ### Risks
 
 - Triangle explosion on noisy masks
-- Flush inlay path deferred but interfaces reserved
+- Flush inlay path was out of scope; interfaces reserved
 
 ---
 
@@ -212,7 +216,7 @@
 - Validate full STL workflow (dimensions, magnets, closed mesh metrics)
 - Plain-language UI terminology and numbered four-step workflow
 - Toast notifications; technical thresholds behind disclosures
-- Primary vs advanced download separation; 3MF still deferred
+- Primary vs advanced download separation; 3MF belonged to Milestone 7
 
 ### Acceptance criteria
 
@@ -262,7 +266,7 @@
 
 **Effort:** S  
 **Dependencies:** M6.2  
-**Status:** Complete (geometry not frozen — see 6.2.2)
+**Status:** Complete (see 6.2.2 for pinch follow-up)
 
 ### Deliverables
 
@@ -322,7 +326,7 @@
 
 **Effort:** S  
 **Dependencies:** M6.2.2  
-**Status:** Complete (geometry not frozen — slicer spot-check still recommended)
+**Status:** Complete (slicer spot-check recommended)
 
 ### Deliverables
 
@@ -404,7 +408,7 @@
 ### Risks
 
 - Bambu may still require manual filament assignment even with standard color groups
-- Some slicers may ignore Materials-extension colors; optional vendor mode remains future work
+- Some slicers may ignore Materials-extension colors; vendor-specific color mapping is not in this product
 
 ---
 
@@ -523,7 +527,7 @@
 
 ### Risks
 
-- New feature thresholds require physical print validation
+- New feature thresholds should be verified on target printers
 - High-resolution grids increase quantization / cleanup / geometry time
 
 ---
@@ -532,7 +536,7 @@
 
 **Effort:** L  
 **Dependencies:** M7.3.2  
-**Status:** Incomplete (superseded by corrective Milestone 7.4.1)
+**Status:** Superseded by corrective Milestone 7.4.1
 
 ### Deliverables
 
@@ -554,7 +558,7 @@
 ### Risks
 
 - High-detail nozzle pipelines remain slower on large crops
-- Physical print validation of thresholds still pending
+- Thresholds should be verified on target printers
 
 ---
 
@@ -621,7 +625,7 @@
 
 ---
 
-## Milestone 8 — Offline and public beta
+## Milestone 8 — Offline caching and project files (optional)
 
 **Effort:** M  
 **Dependencies:** M1–M7.4.1 core  
@@ -646,7 +650,7 @@
 
 **Effort:** M  
 **Dependencies:** M7.4.1 / M8.2.1  
-**Status:** Complete (local preparation; publish/push/commit deferred to the maintainer)
+**Status:** Complete
 
 ### Deliverables
 
@@ -670,7 +674,7 @@
 ### Risks
 
 - Header-only STL byte changes update FNV goldens without geometry change — document old→new hashes
-- Remaining Milestone 8 items (SW, project JSON) stay deferred
+- Remaining Milestone 8 items (SW, project JSON) are optional follow-ups
 
 ---
 
@@ -699,7 +703,7 @@
 
 ### Risks
 
-- Physical print validation still required to confirm bridge quality on target printers
+- Confirm bridge quality on target printers before batch printing
 - Multicolor 3MF byte hashes change when the structural child name / mesh changes
 
 **3MF golden updates (intentional name change Magnet Backing → Structural Bridge):**

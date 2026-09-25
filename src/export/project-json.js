@@ -1,5 +1,6 @@
 /**
- * Project JSON helpers (serialization shape ready; full I/O in Milestone 8).
+ * Project JSON helpers: serialize current project state.
+ * Download/load I/O is not in the current product.
  */
 
 import { toSerializableProject, runtimeOnlyKeys } from "../state.js";
@@ -50,7 +51,7 @@ export function findRuntimeOnlyKeys(obj) {
 }
 
 /**
- * Full download helper reserved for Milestone 8.
+ * Download helper is not in the current product.
  * @throws {Error}
  */
 export function downloadProjectJson() {

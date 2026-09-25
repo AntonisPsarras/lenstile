@@ -1,5 +1,5 @@
 /**
- * Development/test instrumentation for duplicate-pipeline detection (7.4.1).
+ * In-memory instrumentation for duplicate-pipeline detection and tests.
  * No network; counters stay in-memory only.
  */
 

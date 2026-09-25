@@ -4,8 +4,8 @@
 
 | Version | Supported |
 |---------|-----------|
-| Main branch (pre-1.0) | Yes |
-| Tagged releases (when published) | Latest tag only unless noted |
+| Main branch | Yes |
+| Tagged releases | Latest tag only unless noted |
 
 ## Reporting a vulnerability
 
@@ -93,11 +93,10 @@ A development test scans the repository for these patterns and fails on matches.
 - Logic bugs or XSS in unreviewed UI paths remain possible
 - Extremely large or hostile images can still stress memory/CPU within browser limits
 - Cloning or running arbitrary repository revisions is never inherently risk-free
-- Service worker / persistence (when added later) will need a clear update story
 - Browser vulnerabilities are outside this project’s control
 
 ## Local processing guarantees
 
 - Decoding, quantization, geometry, and export run in the browser process
 - Optional Web Workers remain same-origin local scripts
-- Offline caching (future) must cache same-origin assets only
+- This product does not install an offline cache

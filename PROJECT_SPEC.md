@@ -21,36 +21,35 @@ Owners of a modular glasses case need custom printable face tiles. Commercial wo
 
 ## User journey
 
-1. Open the app (static files; optional offline after Milestone 8).
-2. Import a PNG, JPEG, or WebP image (SVG later).
+1. Open the app (static files in a browser).
+2. Import a PNG, JPEG, or WebP image.
 3. Reposition, crop, zoom, rotate, and flip within the 148×53 mm tile frame.
 4. Choose 1–8 colors and create a deterministic color preview.
 5. Optionally replace palette colors (“Image colors”).
 6. Check the design for print problems, fix small details, and approve the printable design.
 7. Build the printable model.
-8. Download one-color STL and/or multicolor 3MF / separate color files (project JSON later).
+8. Download one-color STL and/or multicolor 3MF / separate color files.
 9. Print with a local slicer. No account required.
 
 ## Functional requirements
 
 | ID | Requirement |
 |----|-------------|
-| F1 | Local image import (PNG, JPEG, WebP; SVG later) |
+| F1 | Local image import (PNG, JPEG, WebP) |
 | F2 | Crop editor: pan, zoom, rotate 90°, flip H/V, fit, fill, reset |
 | F3 | Deterministic color reduction for 1–8 colors |
 | F4 | Manual palette color replacement |
 | F5 | Printability cleanup and feature-width warnings |
 | F6 | Single-color combined STL export (Flat or Relief) |
-| F7 | Multicolor 3MF export (Milestone 7) |
+| F7 | Multicolor 3MF export |
 | F8 | Separate aligned STL fallback for multicolor (Flat or Relief tops) |
-| F9 | JSON project save/load (serializable state only) |
 | F10 | Four-step UI: 1. Image → 2. Colors → 3. Make printable → 4. Download |
 | F11 | Keyboard-accessible controls and privacy notice |
-| F12 | Optional relief surface style with strength and height order (Milestone 6.2) |
+| F12 | Optional relief surface style with strength and height order |
 
 ## Non-functional requirements
 
-- Local-first, privacy-first, offline-capable after first load (SW in M8)
+- Local-first, privacy-first; no accounts or network processing
 - Deterministic algorithms (no `Math.random()`, no time-based seeds)
 - No accounts, backends, analytics, telemetry, or paid APIs
 - Zero third-party runtime dependencies
@@ -61,7 +60,7 @@ Owners of a modular glasses case need custom printable face tiles. Commercial wo
 
 Do **not** use: npm/pnpm/yarn/bun, Node.js for development/testing/runtime, React/Vue/Svelte/Angular, TypeScript, Vite/Webpack/Rollup/Parcel, external JS libraries, CDN scripts, external fonts, cloud APIs, auth, databases, analytics, image uploads, remote/server processing, or runtime network requests.
 
-Allowed: HTML, CSS, standard browser JS, ES modules, Canvas, Web Workers, typed arrays, File/Blob APIs, IndexedDB/localStorage where appropriate, Service Worker after core stability.
+Allowed: HTML, CSS, standard browser JS, ES modules, Canvas, Web Workers, typed arrays, File/Blob APIs, IndexedDB/localStorage where appropriate, Service Worker if used.
 
 Dev-only static server: `python3 -m http.server 8080` (Windows: `python -m http.server 8080`)
 
@@ -82,7 +81,7 @@ The standard UI uses plain language. Internal code and developer docs may keep t
 | Smooth surface / Relief surface | Flat (internal id remains `flat`) |
 
 There is **no** editable Design name in the current UI (exports use deterministic
-`lenstile-*` filenames). Project JSON save/load remains a future milestone.
+`lenstile-*` filenames). Project JSON save/load is not part of the current UI.
 
 Technical mm / mm² thresholds live under a collapsed **Technical details** disclosure on Make printable.
 
@@ -127,7 +126,7 @@ User-facing labels: **Surface style**, **Relief strength**, **Height order**. Av
 - Non-binary / multi-height junctions add a tiny offset apex for manifold closure (does not change Tile V1 envelope or permitted top Z range).
 - Separate color meshes may touch with coincident faces; each object must still validate closed independently.
 - Slicer auto-repair warnings must be checked in the slicer UI — the app blocks download on local validation failure but cannot read Bambu Studio’s repair dialog.
-- Combined relief geometry is locally closed for the preserved real fixture, but is **not frozen** until a manual slicer spot-check confirms no unexpected repair.
+- Combined relief geometry is locally closed for the preserved real fixture. Confirm slicer import and any repair dialog on a test file for your workflow.
 - Multicolor 3MF uses Materials-extension color groups for design intent. Standard RGB colors do **not** automatically select AMS filament slots; Bambu Studio may still require manual filament mapping.
 - Exact RGB intent may not match physically loaded filament colors.
 - Full-size packages can be multi-megabyte XML/ZIP; packaging uses fragment join (not streaming) and reports XML/ZIP byte lengths in diagnostics.
@@ -139,7 +138,7 @@ User-facing labels: **Surface style**, **Relief strength**, **Height order**. Av
 | Single STL | 1+ colors, Flat or Relief | One binary STL of tile + artwork (relief uses variable top) |
 | Multicolor 3MF | 2–8 used artwork colors | Standards 3MF: Store ZIP, mm units, parent multipart assembly, Materials `m:colorgroup` colors, structural base + Structural Bridge children |
 | Aligned STL set | Multicolor fallback | Separate STLs sharing the same origin (base Z 0…2.5; artwork; roof is packaged in 3MF) |
-| Project JSON | Always available (M8+) | Serializable project state only |
+| Project JSON | Not in the current UI | Serialization helpers only; no save/load I/O |
 
 Artwork is generated in the center-origin millimetre frame defined in `hardware/TILE_V1_SPEC.md`. The reference `Body122.stl` is CAD-offset; export recenters to the app standard.
 
@@ -181,11 +180,11 @@ Artwork is generated in the center-origin millimetre frame defined in `hardware/
 - No cookies, trackers, external scripts/styles/fonts, or API keys.
 - See `PRIVACY.md` and `SECURITY.md`.
 
-## MVP definition (foundation + path to first useful export)
+## Product definition
 
-**Completed through Milestone 7.2:** static shell, image import, crop editor, deterministic color preview, print check/cleanup, Tile V1 STL export (combined + aligned set), optional relief surfaces with manifold saddle junctions, per-color diagonal-pinch manifold fix, combined-relief multi-height T-junction fix, standards-oriented multipart multicolor 3MF with Materials color groups, full-size packaging repair + staged diagnostics, browser-only testing, plain-language numbered workflow, toast notifications. Physical print validation and slicer 3MF color confirmation still pending.
+**Shipped:** static shell, image import, crop editor, deterministic color preview, print check/cleanup, Tile V1 STL export (combined + aligned set), optional relief surfaces with manifold saddle junctions, per-color diagonal-pinch manifold fix, combined-relief multi-height T-junction fix, standards-oriented multipart multicolor 3MF with Materials color groups, full-size packaging repair + staged diagnostics, browser-only testing, plain-language numbered workflow, toast notifications.
 
-**Full product MVP (through Milestone 8):** project JSON, offline SW, samples, a11y/security review.
+Confirm fit, print quality, and slicer filament mapping on your hardware before batch printing.
 
 ## Image import (Milestone 2.1)
 
@@ -204,14 +203,14 @@ Artwork is generated in the center-origin millimetre frame defined in `hardware/
 | Nozzle profiles | Exactly two choices: `nozzle02` (0.2 mm — Fine detail) and `nozzle04` (0.4 mm — Standard, **default**) |
 | Meaning | Website nozzle choice controls **image preparation** (processing grid + printable thresholds). It does **not** set the slicer's hardware nozzle profile — select the matching nozzle in the slicer |
 | Automatic detail | `PROCESSING_PROFILES`: nozzle02 → 10 px/mm (0.10 mm); nozzle04 → 8 px/mm (0.125 mm). Both below the 1,500,000-pixel limit |
-| Feature thresholds | Initial defaults pending physical validation: nozzle02 → 0.25 mm / 0.10 mm²; nozzle04 → 0.45 mm / 0.30 mm² |
+| Feature thresholds | Conservative defaults for 0.2 mm and 0.4 mm nozzles; verify on your printer: nozzle02 → 0.25 mm / 0.10 mm²; nozzle04 → 0.45 mm / 0.30 mm² |
 | Derived print settings | Nozzle diameter, min feature, min gap, island/hole thresholds, and processing ppm come from `PRINT_PROFILES` |
 | Legacy detail profiles | Low/Standard/High retained for serialization migration only; not the primary resolution driver |
 | State | Stores `printability.profileId` and legacy `quantization.detailProfileId`; resolution derives from nozzle processing profile |
 | Serialization | Project snapshot stores profile IDs + profile schema versions; not duplicated editable nozzle/ppm fields |
 | Legacy nozzle | `nozzle06` (removed) migrates to `nozzle04`; `nozzle04` stays `nozzle04`. 0.6 mm is not preserved as a hidden profile |
 | Legacy ppm | Exact 1/2/4 → low/standard/high; other finite values → nearest of {1,2,4} (equidistant ties prefer standard) |
-| Validation note | Profile threshold values are **initial defaults pending physical print validation** |
+| Validation note | Profile threshold values are conservative defaults; verify on your printer and filament |
 | Printability revision | `printabilityRevision` and `sourceRevision` increment when the nozzle profile changes |
 
 ## Printability cleanup (Milestone 3)
@@ -221,7 +220,7 @@ Artwork is generated in the center-origin millimetre frame defined in `hardware/
 | Input | Successful indexed-color result from Milestone 2; original indices are never overwritten |
 | Runtime buffers | `runtime.quantization.indices`, `runtime.printability.cleanedIndices`, `runtime.printability.issueMask`, `runtime.printability.report` |
 | Physical units | All thresholds convert via tile mm ÷ indexed width/height (never raw pixel counts alone) |
-| Connectivity | Deterministic **4-connectivity** (N/E/S/W); row-major discovery; component IDs by discovery order. 8-connectivity reserved, not exposed |
+| Connectivity | Deterministic **4-connectivity** (N/E/S/W); row-major discovery; component IDs by discovery order. Product labeling uses 4-connectivity |
 | Why 4-conn | Diagonal-only touches do not share an edge and often print as disconnected under FDM |
 | Islands | Components with area `< minimumIslandAreaMm2` replaced by dominant 4-neighbour boundary colour (tie → lower palette index; no neighbours → global dominant) |
 | Holes | Non-boundary-touching components with area `< maximumHoleAreaToFillMm2` filled the same way |
@@ -260,11 +259,11 @@ Artwork is generated in the center-origin millimetre frame defined in `hardware/
 - AI / ML color or geometry assistance
 - Cloud sync, accounts, marketplaces
 - Mesh boolean CSG libraries
-- Live 3D WebGL preview (may be considered later without deps)
-- SVG import (planned later)
-- Undo/redo stack (planned later)
-- IndexedDB persistence (planned later)
+- Live 3D WebGL preview
+- SVG import
+- Undo/redo stack
+- Project JSON save/load, IndexedDB persistence, and offline service worker
+- Sample / icon asset packs
 - Automatic slicer integration
 - Physical manufacturing or fulfillment
-- STL / 3MF export (Milestones 4–7.1) — **STL + aligned set + multipart Materials-extension 3MF landed; project JSON remains Milestone 8**
 - Layer height as a user-facing mesh setting

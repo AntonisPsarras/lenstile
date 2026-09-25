@@ -5,7 +5,7 @@
  * Why 4-connectivity: diagonal-only touches do not share an edge and often
  * print as disconnected or weakly joined features under FDM extrusion.
  * Counting them as connected would under-report islands and over-merge gaps.
- * An 8-connectivity mode is reserved for future experiments but not exposed.
+ * An 8-connectivity mode exists for callers that need it; product labeling uses 4-connectivity.
  *
  * Scan order: stable row-major (y outer, x inner).
  * Component IDs: dense integers starting at 1 in discovery order.
@@ -14,7 +14,7 @@
 /** Active product connectivity. */
 export const CONNECTIVITY_4 = 4;
 
-/** Reserved for future use — not exposed in UI. */
+/** Available constant; product UI uses CONNECTIVITY_4. */
 export const CONNECTIVITY_8 = 8;
 
 /** @typedef {{ id: number, paletteIndex: number, pixelCount: number, minX: number, minY: number, maxX: number, maxY: number, touchesBoundary: boolean }} ComponentInfo */

@@ -52,8 +52,8 @@ export const LARGE_IMAGE_PIXEL_WARNING = 40_000_000;
 
 /**
  * Hard cap on quantization output pixels (widthPx × heightPx).
- * Chosen for a browser prototype: ~1.5M pixels keeps RGBA (~6 MiB) and
- * clustering workable on typical laptops without silently downsampling.
+ * Chosen for typical laptop browsers: ~1.5M pixels keeps RGBA (~6 MiB) and
+ * clustering workable without silently downsampling.
  */
 export const MAX_QUANTIZATION_PIXELS = 1_500_000;
 

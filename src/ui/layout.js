@@ -775,7 +775,7 @@ function buildReliefEditorPanel() {
         id: "surface-relief-guidance",
         class: "help-text relief-editor-guidance",
       }, [
-        "Relief works with one filament or multicolor printing. Physical validation is still required.",
+        "Relief works with one filament or multicolor printing. Confirm height and fit on a test print.",
       ]),
       el("fieldset", { class: "nested-fieldset relief-editor-fieldset" }, [
         el("legend", {}, ["Relief strength"]),
