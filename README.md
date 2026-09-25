@@ -171,7 +171,8 @@ Tiles are sized for a compatible modular glasses case with matching magnet
 layout. Confirm fit with your case before printing large batches.
 
 ```text
-MakerWorld glasses-case link: to be added before release.
+MakerWorld glasses-case link: https://makerworld.com/en/models/3100733-lenstile-modular-glasses-case-with-custom-tiles#profileId-3495008
+Printables glasses-case link: https://www.printables.com/model/1792595-lenstile-modular-glasses-case-with-custom-tiles
 ```
 
 ## Physical tile dimensions (Tile V1)
@@ -279,6 +280,4 @@ complete. Offline persistence and public release follow-up items remain.
 
 ## Project status
 
-LensTile is an open-source, local-first tool approaching public-repository
-readiness. Physical print validation and the MakerWorld case link are still
-outstanding before a formal 1.0 release claim.
+LensTile is an open-source, local-first tool, ready for public reliable use.
